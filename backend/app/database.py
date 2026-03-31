@@ -14,3 +14,12 @@ session = async_sessionmaker(engine, expire_on_commit=False)
 
 class Base(DeclarativeBase):
     pass
+
+async def test_connection():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        print("Tables created successfully!")
+
+async def get_session():
+    async with session() as s:
+        yield s

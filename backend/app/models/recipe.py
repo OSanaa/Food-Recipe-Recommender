@@ -18,9 +18,9 @@ class Recipe(Base):
     __tablename__ = "recipe"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(50), nullable=False)
-    instructions: Mapped[str] = mapped_column(Text, nullable=True)
+    instructions: Mapped[str] = mapped_column(Text, nullable=False)
     link: Mapped[str] = mapped_column(String(1000), nullable=True)
-    author: Mapped[str] = mapped_column(String(50),nullable=True)
+    author: Mapped[str] = mapped_column(String(50),nullable=False)
     source: Mapped[str] = mapped_column(String(10), nullable=False)
     
 class Ingredient(Base):
