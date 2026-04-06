@@ -15,7 +15,6 @@ class Recipe(Base):
         area: The area in which the food is from.
         category: The food category.
         source: Distinction of if the recipe was from external source or from a user.
-    
     """
     __tablename__ = "recipe"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -27,6 +26,7 @@ class Recipe(Base):
     category: Mapped[str] = mapped_column(String(50), nullable=True)
     source: Mapped[str] = mapped_column(String(10), nullable=False)
     ingredients: Mapped[list["Ingredient"]] = relationship(back_populates="recipe")
+    # cooking_log: Mapped[list["CookingLog"]] = relationship(back_populates="recipe")
     
 class Ingredient(Base):
     """Represents the ingredients that make up the recipe.
@@ -59,7 +59,8 @@ class CookingLog(Base):
     """
     __tablename__ = "cooking_log"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    date_cooked: Mapped[datetime] = mapped_column(DateTime,nullable=False)
+    date_cooked: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
     rating: Mapped[float] = mapped_column(Numeric(2,1), nullable=True)
     recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"))
+    # recipe: Mapped['Recipe'] = relationship(back_populates="cooking_log")

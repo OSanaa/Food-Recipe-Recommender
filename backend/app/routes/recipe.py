@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from fastapi import APIRouter, Depends, HTTPException
 from app.database import get_session
 from app.models.recipe import Recipe, Ingredient
 from app.schemas.recipe import RecipeCreate, RecipeResponse, IngredientCreate, IngredientResponse
@@ -43,9 +42,9 @@ async def get_recipe_by_id(id : int, db: AsyncSession = Depends(get_session)):
     result = await db.execute(
         select(Recipe).options(selectinload(Recipe.ingredients)).where(Recipe.id == id)
         )
-    if not result:
-        raise HTTPException(status_code=404, detail="Recipe not found")
     recipe = result.scalars().first()
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")    
     return(recipe)
 
 @router.delete("/recipes/{id}")
