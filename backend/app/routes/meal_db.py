@@ -14,7 +14,7 @@ async def upload_api_recipe(search_term: str, db: AsyncSession = Depends(get_ses
         recipe_formatted, ingredients_formatted = transform_meal_to_recipe(meal)
         existing = await db.execute(
             select(Recipe).where(Recipe.name == recipe_formatted["name"])
-            )
+            ) 
         
         if existing.scalars().first():
             continue
