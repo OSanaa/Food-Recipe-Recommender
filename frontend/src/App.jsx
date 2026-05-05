@@ -4,53 +4,80 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import RecipeCard from './components/RecipeCard'
+import RecipeDetail from './components/RecipeDetail'
+import RecipeFilter from './components/RecipeFilter'
+import RecipeForm from './components/RecipeForm'
 import './App.css'
 
 function App() {
   const [recipes, setRecipes] = useState([])
-  const [area, setArea] = useState("")
-  const [category, setCategory] = useState("")
-  useEffect(() => {
+  const [selectedArea, setSelectedArea] = useState('')
+  const [areas, setAreas] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const [categories, setCategories] = useState([])
+  const [selectedRecipe, setSelectedRecipe] = useState(null)
+  const [search, setSearch] = useState("")
+  const [showForm, setShowForm] = useState(false)
+
+  const fetchRecipes = () => {
     let url = "http://localhost:8000/recipes"
     const params = []
-    if (area) params.push(`area=${area}`)
-    if (category) params.push(`category=${category}`)
+    if (selectedArea) params.push(`area=${selectedArea}`)
+    if (selectedCategory) params.push(`category=${selectedCategory}`)
     if (params.length > 0) url += "?" + params.join("&")
 
     fetch(url)
       .then(response => response.json())
       .then(data => setRecipes(data))
-  }, [area, category])
+  }
+
+  useEffect(() => {
+
+    let areaUrl = "http://localhost:8000/recipes/areas"
+    fetch(areaUrl)
+    .then(response => response.json())
+    .then(data => setAreas(data))
+
+    let categoryUrl = "http://localhost:8000/recipes/categories"
+    fetch(categoryUrl)
+    .then(response => response.json())
+    .then(data => setCategories(data))
+
+    fetchRecipes()
+
+  }, [selectedArea, selectedCategory])
 
   return (
     <div>
       <h1>Food Recipe Recommender</h1>
-      <label>
-        Pick an area: 
-        <select
-        name="area"
-        onChange={e => setArea(e.target.value)}
-        >
-          <option value="">All Areas</option>
-          <option value="Japanese">Japanese</option>
-          <option value="Italian">Italian</option>
-        </select>
-      </label>
-      <hr />
-      <label>
-        Pick a category: 
-        <select
-        name="category"
-        onChange={e => setCategory(e.target.value)}
-        >
-          <option value="">All Categories</option>
-          <option value="Chicken">Chicken</option>
-          <option value="Seafood">Seafood</option>
-        </select>
-      </label>
-      {recipes.map(recipe => (
-        <RecipeCard key={recipe.id} recipe={recipe}/>
-      ))}
+      {showForm ? (<RecipeForm onBack={() => setShowForm(false)} onSubmitSuccess={fetchRecipes}/>
+      ) : selectedRecipe ? (
+      <RecipeDetail recipe={selectedRecipe} onBack={() => setSelectedRecipe(null)} />
+      ) : (
+      <div>
+        <button onClick={() => setShowForm(!showForm)}>Create Recipe</button>
+        <br/>
+        <input type='text'
+        placeholder='Search recipes'
+        value={search}
+        onChange={e => setSearch(e.target.value)}/>
+        <RecipeFilter areas={areas}
+        categories={categories}
+        selectedArea={selectedArea}
+        selectedCategory={selectedCategory}
+        setSelectedArea={setSelectedArea}
+        setSelectedCategory={setSelectedCategory}/>
+        
+        {recipes
+        .filter(recipe => recipe.name.toLowerCase().includes(search.toLowerCase()))
+        .map(recipe => (
+          <RecipeCard key={recipe.id}
+          recipe={recipe}
+          onClick={() => setSelectedRecipe(recipe)}/>
+          ))
+        }
+      </div>
+        )}    
     </div>
   )
 }

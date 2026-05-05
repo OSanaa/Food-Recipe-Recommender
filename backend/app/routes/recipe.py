@@ -8,6 +8,16 @@ from app.schemas.recipe import RecipeCreate, RecipeResponse, IngredientCreate, I
 
 router = APIRouter()
 
+@router.get("/recipes/areas")
+async def get_all_areas(db: AsyncSession = Depends(get_session)):
+    result = await db.execute(select(Recipe.area).distinct())
+    return result.scalars().all()
+
+@router.get("/recipes/categories")
+async def get_all_categories(db: AsyncSession = Depends(get_session)):
+    result = await db.execute(select(Recipe.category).distinct())
+    return result.scalars().all()
+
 @router.post("/recipes", response_model=RecipeResponse)
 async def create_recipe(recipe: RecipeCreate, db: AsyncSession = Depends(get_session)):
     recipe_dict = recipe.model_dump()
@@ -24,7 +34,10 @@ async def create_recipe(recipe: RecipeCreate, db: AsyncSession = Depends(get_ses
         ingredient['recipe_id'] = new_recipe.id
         db.add(Ingredient(**ingredient))
     await db.commit()
-    await db.refresh(new_recipe)
+    # await db.refresh(new_recipe)
+    result = await db.execute(
+    select(Recipe).options(selectinload(Recipe.ingredients)).where(Recipe.id == new_recipe.id))
+    new_recipe = result.scalars().first()
     return(new_recipe)
 
 @router.get("/recipes", response_model=list[RecipeResponse])
@@ -69,6 +82,9 @@ async def update_recipe_by_id(id: int, updated_recipe: RecipeCreate, db: AsyncSe
         setattr(recipe_to_update, key, value)
     
     await db.commit()
-    await db.refresh(recipe_to_update)
+    # await db.refresh(recipe_to_update)
+    result = await db.execute(
+    select(Recipe).options(selectinload(Recipe.ingredients)).where(Recipe.id == new_recipe.id))
+    new_recipe = result.scalars().first()
 
     return(recipe_to_update)
