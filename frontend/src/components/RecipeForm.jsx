@@ -9,8 +9,9 @@ export default function RecipeForm({onBack, onSubmitSuccess}){
         category : '',
         instructions : '',
         source : 'user',
-        // ingredients : []
+        ingredients : []
     });
+    const [toggleAdd, setToggleAdd] = useState(false)
 
     function submitToApi(formData){
         fetch("http://localhost:8000/recipes", {
@@ -28,9 +29,22 @@ export default function RecipeForm({onBack, onSubmitSuccess}){
     const addIngredient = () => {
         setFormData({
             ...formData,
-            ingrediets: [...formData.ingredients, {name: "", quantity: "", unit: ""}]
+            ingredients: [...formData.ingredients, {name: "", quantity: "", unit: ""}]
         })
     }
+
+    // const handleIngredientDelete = (deleteIndex, e) => {
+    //     const updatedIngredients = formData.ingredients.map((ing) =>
+    //         ing.id !== deleteIndex ? {...ing, [e.target.value]: e.target.value} : null)
+    //     setFormData({...formData, ingredients: updatedIngredients})
+    // }
+    const handleIngredientDelete = (deleteIndex) => {
+        setFormData(prevData => ({
+            ...prevData, 
+            ingredients: prevData.ingredients.filter((_,i) => i !== deleteIndex)}))
+    }
+    
+
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -48,9 +62,9 @@ export default function RecipeForm({onBack, onSubmitSuccess}){
 
     const handleIngredientChange = (index, e) => {
         const updatedIngredients = formData.ingredients.map((ing, i) =>
-        i === index ? { ...ing, [e.target.name]: e.target.value} : ing
+            i === index ? { ...ing, [e.target.name]: e.target.value} : ing
         )
-        setFormData({... formData, ingredients: updatedIngredients})    
+        setFormData({ ...formData, ingredients: updatedIngredients})    
     }
 
     return (
@@ -107,14 +121,35 @@ export default function RecipeForm({onBack, onSubmitSuccess}){
                     />
                 </label>
                 <br/>
-                <label>Ingredients:
-                    <input type="text"
-                    name='ingredients'
-                    value={formData.ingredient}
-                    onChange={handleChange}
-                    />
-                </label>
+                <button type='button' onClick={addIngredient}>Add Ingredient</button>
                 <br/>
+                {formData.ingredients.map((ing, index) => (
+                    <div key={index}>
+                        <label>Ingredient Name:
+                        <input type="text"
+                        name='name'
+                        value={ing.name}
+                        onChange={(e) => handleIngredientChange(index, e)}
+                        />
+                        </label>
+                        <label>Quantity:
+                        <input type="text"
+                        name='quantity'
+                        value={ing.quantity}
+                        onChange={(e) => handleIngredientChange(index, e)}
+                        />
+                        </label>
+                        <label>Unit:
+                        <input type="unit"
+                        name='unit'
+                        value={ing.unit}
+                        onChange={(e) => handleIngredientChange(index, e)}
+                        />
+                        </label>
+                        <button type='button' onClick={() => handleIngredientDelete(index)}>X</button>
+                    </div>
+                    )
+                )}
                 <button type="submit" name="button" value="submit">Submit</button>
             </form>
         </div>
