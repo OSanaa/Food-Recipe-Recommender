@@ -33,19 +33,12 @@ export default function RecipeForm({onBack, onSubmitSuccess}){
         })
     }
 
-    // const handleIngredientDelete = (deleteIndex, e) => {
-    //     const updatedIngredients = formData.ingredients.map((ing) =>
-    //         ing.id !== deleteIndex ? {...ing, [e.target.value]: e.target.value} : null)
-    //     setFormData({...formData, ingredients: updatedIngredients})
-    // }
     const handleIngredientDelete = (deleteIndex) => {
         setFormData(prevData => ({
             ...prevData, 
             ingredients: prevData.ingredients.filter((_,i) => i !== deleteIndex)}))
     }
-    
 
-    
     const handleSubmit = (e) => {
         e.preventDefault();
         alert(`Submitted Name: ${formData.name}`)

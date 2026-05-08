@@ -19,6 +19,7 @@ function App() {
   const [search, setSearch] = useState("")
   const [showForm, setShowForm] = useState(false)
 
+
   const fetchRecipes = () => {
     let url = "http://localhost:8000/recipes"
     const params = []
@@ -42,7 +43,6 @@ function App() {
     fetch(categoryUrl)
     .then(response => response.json())
     .then(data => setCategories(data))
-
     fetchRecipes()
 
   }, [selectedArea, selectedCategory])
