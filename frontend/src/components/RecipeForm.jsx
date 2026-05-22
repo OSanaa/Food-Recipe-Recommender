@@ -62,7 +62,7 @@ export default function RecipeForm({onBack, onSubmitSuccess}){
 
     return (
         
-        <div className="form">
+        <div className="form ">
             <button onClick={onBack}>Back</button>
             <form onSubmit={handleSubmit}>
                 <label>Recipe Name: 
