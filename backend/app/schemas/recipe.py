@@ -1,6 +1,7 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
+
 class IngredientCreate(BaseModel):
     name: str
     quantity: str | None = None
@@ -12,6 +13,7 @@ class CookingLogCreate(BaseModel):
     rating: float
     recipe_id: int
 
+
 class RecipeCreate(BaseModel):
     name: str 
     instructions: str
@@ -21,6 +23,7 @@ class RecipeCreate(BaseModel):
     category: str | None = None
     source: str
     ingredients: list[IngredientCreate] = []
+    # embedding: list | None = None
     # cooking_log: list[CookingLogCreate] = []
 
 class IngredientResponse(BaseModel):
@@ -33,4 +36,3 @@ class RecipeResponse(RecipeCreate):
     id: int
     ingredients: list[IngredientResponse] = []
     model_config = ConfigDict(from_attributes=True)
-

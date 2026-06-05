@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
+import RecipeRecommendation from './RecipeRecommendation';
 
-export default function RecipeDetail({recipe, onBack}){
+export default function RecipeDetail({recipe, onBack, onClick}){
     const [logs, setLogs] = useState([])
     const [formData, setFormData] = useState({
         date_cooked: new Date().toISOString().slice(0, 16),
@@ -9,6 +10,7 @@ export default function RecipeDetail({recipe, onBack}){
         notes: '',
         recipe_id: recipe.id
     });
+    const [recipeRecommendation, setRecipeRecommendation] = useState([])
 
     // useEffect(() => {
     //     fetch(`http://localhost:8000/cooking-logs?recipe_id=${recipe.id}`)
@@ -17,11 +19,12 @@ export default function RecipeDetail({recipe, onBack}){
     // }, [recipe.id])
     useEffect(() => {
         fetchLogs()
+        window.scrollTo(0, 0)
     }, [recipe.id])
 
 
     function fetchLogs() {
-    fetch(`http://localhost:8000/cooking-logs?recipe_id=${recipe.id}`)
+        fetch(`http://localhost:8000/cooking-logs?recipe_id=${recipe.id}`)
         .then(res => res.json())
         .then(data => setLogs(data))
     }
@@ -54,7 +57,7 @@ export default function RecipeDetail({recipe, onBack}){
 
     return (
         <div className = "detail p-6 items-center gap-4 mb-2 space-y-2 max-w-3xl mx-auto">
-            <button className="items-start border hover:bg-gray-200 rounded px-3 pt-1.5 cursor-pointer font-medium"
+            <button className="items-start border hover:bg-gray-200 rounded px-3 py-.5 cursor-pointer font-medium"
             onClick={onBack}>Back</button>
             <h2 className='text-2xl font-bold text-heading'>{recipe.name}</h2>
             <div className= 'mb-2 space-y-2'>
@@ -123,6 +126,12 @@ export default function RecipeDetail({recipe, onBack}){
                     value="submit">Submit
                 </button>
                 </form>
+            </div>
+            <div>
+                <RecipeRecommendation 
+                recipe_id={recipe.id}
+                onClick={onClick}
+                />
             </div>
         </div>
     )

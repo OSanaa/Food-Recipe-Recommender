@@ -4,7 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from app.database import get_session
 from app.models.recipe import Recipe, Ingredient
-from app.schemas.recipe import RecipeCreate, RecipeResponse, IngredientCreate, IngredientResponse
+from app.schemas.recipe import RecipeCreate, RecipeResponse
+# from app.services.embeddings import generate_embedding, build_recipe_text
 
 router = APIRouter()
 
@@ -39,6 +40,7 @@ async def create_recipe(recipe: RecipeCreate, db: AsyncSession = Depends(get_ses
     select(Recipe).options(selectinload(Recipe.ingredients)).where(Recipe.id == new_recipe.id))
     new_recipe = result.scalars().first()
     return(new_recipe)
+    
 
 @router.get("/recipes", response_model=list[RecipeResponse])
 async def get_all_recipes(area: str | None = None, category: str | None = None, db: AsyncSession = Depends(get_session)):
@@ -58,16 +60,9 @@ async def get_recipe_by_id(id : int, db: AsyncSession = Depends(get_session)):
     recipe = result.scalars().first()
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")    
-    return(recipe)
+    return recipe
 
-@router.delete("/recipes/{id}")
-async def delete_recipe_by_id(id: int, db: AsyncSession = Depends(get_session)):
-    delete_recipe = await db.get(Recipe, id)
-    if not delete_recipe:
-        raise HTTPException(status_code=404, detail="Recipe not found")
-    await db.delete(delete_recipe)
-    await db.commit()
-    return(f"Recipe with ID: {id} has been deleted")
+
 
 @router.put("/recipes/{id}", response_model=RecipeResponse)
 async def update_recipe_by_id(id: int, updated_recipe: RecipeCreate, db: AsyncSession = Depends(get_session)):
@@ -88,3 +83,14 @@ async def update_recipe_by_id(id: int, updated_recipe: RecipeCreate, db: AsyncSe
     new_recipe = result.scalars().first()
 
     return(recipe_to_update)
+
+@router.delete("/recipes/{id}")
+async def delete_recipe_by_id(id: int, db: AsyncSession = Depends(get_session)):
+    delete_recipe = await db.get(Recipe, id)
+    if not delete_recipe:
+        raise HTTPException(status_code=404, detail="Recipe not found")
+    await db.delete(delete_recipe)
+    await db.commit()
+    return(f"Recipe with ID: {id} has been deleted")
+
+

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import FormInput from './FormInput';
 
 export default function RecipeForm({onBack, onSubmitSuccess}){
 
@@ -61,90 +62,37 @@ export default function RecipeForm({onBack, onSubmitSuccess}){
     }
 
     return (
-        
-        <div className="form ">
-            <button onClick={onBack}>Back</button>
-            <form onSubmit={handleSubmit}>
-                <label>Recipe Name: 
-                    <input type="text"
-                    name='name'
-                    value={formData.name}
-                    onChange={handleChange}
-                    />
-                </label>
-                <br/>
-                <label>Author:
-                    <input type="text"
-                    name='author'
-                    value={formData.author}
-                    onChange={handleChange}
-                    />
-                </label>
-                <br/>
-                <label>Area:
-                    <input type="text"
-                    name='area'
-                    value={formData.area}
-                    onChange={handleChange}
-                    />
-                </label>
-                <br/>
-                <label>Category:
-                    <input type="text"
-                    name='category'
-                    value={formData.category}
-                    onChange={handleChange}
-                    />
-                </label>
-                <br/>
-                <label>Instructions:
-                    <input type="text"
-                    name='instructions'
-                    value={formData.instructions}
-                    onChange={handleChange}
-                    />
-                </label>
-                <br/>
-                <label>Source:
-                    <input type="text"
-                    name='source'
-                    placeholder='user'
-                    value={formData.source}
-                    onChange={handleChange}
-                    />
-                </label>
-                <br/>
-                <button type='button' onClick={addIngredient}>Add Ingredient</button>
-                <br/>
-                {formData.ingredients.map((ing, index) => (
-                    <div key={index}>
-                        <label>Ingredient Name:
-                        <input type="text"
-                        name='name'
-                        value={ing.name}
-                        onChange={(e) => handleIngredientChange(index, e)}
-                        />
-                        </label>
-                        <label>Quantity:
-                        <input type="text"
-                        name='quantity'
-                        value={ing.quantity}
-                        onChange={(e) => handleIngredientChange(index, e)}
-                        />
-                        </label>
-                        <label>Unit:
-                        <input type="unit"
-                        name='unit'
-                        value={ing.unit}
-                        onChange={(e) => handleIngredientChange(index, e)}
-                        />
-                        </label>
-                        <button type='button' onClick={() => handleIngredientDelete(index)}>X</button>
-                    </div>
-                    )
-                )}
-                <button type="submit" name="button" value="submit">Submit</button>
-            </form>
+        <div className="detail p-6 items-center gap-4 mb-2 space-y-2 max-w-3xl mx-auto">
+            <button className='btn-outline' 
+            onClick={onBack}>Back</button>
+            <div className='max-w-md'>
+                <h3 className="text-xl font-medium mb-2">Create Recipe</h3>                
+                <form onSubmit={handleSubmit} className='space-y-4'>
+                    <FormInput label="Recipe Name:" name="name" value={formData.name} onChange={handleChange}/>
+                    <FormInput label="Author:" name="author" value={formData.author} onChange={handleChange}/>
+                    <FormInput label="Area:" name="area" value={formData.area} onChange={handleChange}/>
+                    <FormInput label="Category:" name="category" value={formData.category} onChange={handleChange}/>
+                    <FormInput label="Instructions:" type='textarea' name="instructions" value={formData.instructions} onChange={handleChange}/>
+                    <FormInput label="Source:" placeholder="user" name="source" value={formData.source} onChange={handleChange}/>
+                    <button className='btn-outline' type='button' onClick={addIngredient}>Add Ingredient</button>
+                    {formData.ingredients.map((ing, index) => (
+                        <div key={index} className="flex items-end gap-3">
+                            <div className="flex-[2]">
+                                <FormInput label="Ingredient Name:" name="name" value={ing.name} onChange={(e) => handleIngredientChange(index, e)}/>
+                            </div>
+                            <div className="w-20">
+                                <FormInput label="Quantity:" name="quantity" value={ing.quantity} onChange={(e) => handleIngredientChange(index, e)}/>
+                            </div>
+                            <div className="w-20">
+                                <FormInput label="Unit:" name="unit" value={ing.unit} onChange={(e) => handleIngredientChange(index, e)}/>
+                            </div>
+                            <button className='btn-outline' type='button' onClick={() => handleIngredientDelete(index)}>X</button>
+                        </div>
+                        )
+                    )}
+                    <button className='btn-primary' type="submit" name="button" value="submit">Submit</button>
+                </form>
+            </div>
         </div>
     )
 }

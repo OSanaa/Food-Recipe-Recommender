@@ -1,5 +1,6 @@
 from sqlalchemy import Integer, String, Text, DateTime, ForeignKey, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from pgvector.sqlalchemy import Vector
 from datetime import datetime
 from app.database import Base
 
@@ -26,6 +27,7 @@ class Recipe(Base):
     category: Mapped[str] = mapped_column(String(50), nullable=True)
     source: Mapped[str] = mapped_column(String(10), nullable=False)
     ingredients: Mapped[list["Ingredient"]] = relationship(back_populates="recipe")
+    embedding: Mapped[list] = mapped_column(Vector(384), nullable=True)
     # cooking_log: Mapped[list["CookingLog"]] = relationship(back_populates="recipe")
     
 class Ingredient(Base):

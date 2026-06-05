@@ -10,6 +10,7 @@ import RecipeForm from './components/RecipeForm'
 
 function App() {
   const [recipes, setRecipes] = useState([])
+
   const [selectedArea, setSelectedArea] = useState('')
   const [areas, setAreas] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -17,7 +18,6 @@ function App() {
   const [selectedRecipe, setSelectedRecipe] = useState(null)
   const [search, setSearch] = useState("")
   const [showForm, setShowForm] = useState(false)
-
 
   const fetchRecipes = () => {
     let url = "http://localhost:8000/recipes"
@@ -74,7 +74,7 @@ function App() {
       </nav>
       {showForm ? (<RecipeForm onBack={() => setShowForm(false)} onSubmitSuccess={fetchRecipes}/>
       ) : selectedRecipe ? (
-      <RecipeDetail recipe={selectedRecipe} onBack={() => setSelectedRecipe(null)} />
+      <RecipeDetail recipe={selectedRecipe} onBack={() => setSelectedRecipe(null)} onClick={(recipe) => setSelectedRecipe(recipe)}/>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-5"> 
           {recipes
