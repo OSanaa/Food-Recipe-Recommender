@@ -11,12 +11,12 @@ router = APIRouter()
 
 @router.get("/recipes/areas")
 async def get_all_areas(db: AsyncSession = Depends(get_session)):
-    result = await db.execute(select(Recipe.area).distinct())
+    result = await db.execute(select(Recipe.area).distinct().order_by(Recipe.area))
     return result.scalars().all()
 
 @router.get("/recipes/categories")
 async def get_all_categories(db: AsyncSession = Depends(get_session)):
-    result = await db.execute(select(Recipe.category).distinct())
+    result = await db.execute(select(Recipe.category).distinct().order_by(Recipe.category))
     return result.scalars().all()
 
 @router.post("/recipes", response_model=RecipeResponse)
@@ -61,7 +61,6 @@ async def get_recipe_by_id(id : int, db: AsyncSession = Depends(get_session)):
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")    
     return recipe
-
 
 
 @router.put("/recipes/{id}", response_model=RecipeResponse)

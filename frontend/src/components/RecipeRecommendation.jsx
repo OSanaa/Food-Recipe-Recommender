@@ -5,7 +5,6 @@ import RecipeDetail from "./RecipeDetail"
 
 export default function RecipeRecommendation({recipe_id, onClick}){
       const [recipeRecommendationList, setRecipeRecommendationList] = useState([])
-    //   const [selectedRecipe, setSelectedRecipe] = useState(null)
 
       useEffect(() => {
         fetchRecommendedRecipe()

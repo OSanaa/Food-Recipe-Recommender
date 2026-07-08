@@ -41,3 +41,8 @@ async def get_similar_recipe_recommendations(id : int, db: AsyncSession = Depend
     ) 
     similar_recipe = similar_result.scalars().all()
     return(similar_recipe)
+
+
+@router.get("/recipes/ingredient-filter",response_model=list[RecipeResponse])
+async def get_similar_recipe_per_ingredients(db: AsyncSession = Depends(get_session)):
+    pass

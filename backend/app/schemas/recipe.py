@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, PositiveFloat
 from datetime import datetime
 
 
@@ -12,7 +12,6 @@ class CookingLogCreate(BaseModel):
     notes: str | None = None
     rating: float
     recipe_id: int
-
 
 class RecipeCreate(BaseModel):
     name: str 
@@ -32,7 +31,19 @@ class IngredientResponse(BaseModel):
     quantity: str | None = None
     unit: str | None = None
 
+class IngredientSearch(BaseModel):
+    ingredients: list[str]
+
 class RecipeResponse(RecipeCreate):
     id: int
     ingredients: list[IngredientResponse] = []
     model_config = ConfigDict(from_attributes=True)
+
+class IngredientMatchResponse(BaseModel):
+    id: int
+    recipe_name: str
+    total_ingredient_count: int
+    ingredient_match_count: int
+    percentage_matched: float
+    model_config = ConfigDict(from_attributes=True)
+

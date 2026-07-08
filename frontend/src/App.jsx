@@ -18,6 +18,7 @@ function App() {
   const [selectedRecipe, setSelectedRecipe] = useState(null)
   const [search, setSearch] = useState("")
   const [showForm, setShowForm] = useState(false)
+  const [view, setView] = useState("browse")
 
   const fetchRecipes = () => {
     let url = "http://localhost:8000/recipes"
@@ -72,11 +73,12 @@ function App() {
           onChange={e => setSearch(e.target.value)}/>
         </div>
       </nav>
+      <div >
       {showForm ? (<RecipeForm onBack={() => setShowForm(false)} onSubmitSuccess={fetchRecipes}/>
       ) : selectedRecipe ? (
       <RecipeDetail recipe={selectedRecipe} onBack={() => setSelectedRecipe(null)} onClick={(recipe) => setSelectedRecipe(recipe)}/>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-5"> 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pt-5"> 
           {recipes
           .filter(recipe => recipe.name.toLowerCase().includes(search.toLowerCase()))
           .map(recipe => (
@@ -87,6 +89,7 @@ function App() {
           }
         </div>
       )}
+      </div>
     </div>
   )
 }

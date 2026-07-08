@@ -3,6 +3,7 @@ from app.routes.recipe import router as recipe_router
 from app.routes.meal_db import router as meal_db_router
 from app.routes.cooking_log import router as cooking_log_db_router
 from app.routes.embeddings import router as embedding_router
+from app.routes.ingredients import router as ingredients_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Food Recipe Recommender API")
@@ -22,3 +23,4 @@ app.include_router(recipe_router)
 app.include_router(meal_db_router)
 app.include_router(cooking_log_db_router)
 app.include_router(embedding_router)
+app.include_router(ingredients_router)
