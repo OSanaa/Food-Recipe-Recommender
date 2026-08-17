@@ -7,6 +7,7 @@ import RecipeCard from './components/RecipeCard'
 import RecipeDetail from './components/RecipeDetail'
 import RecipeFilter from './components/RecipeFilter'
 import RecipeForm from './components/RecipeForm'
+import IngredientSearch from './components/IngredientSearch'
 
 function App() {
   const [recipes, setRecipes] = useState([])
@@ -47,6 +48,7 @@ function App() {
 
   }, [selectedArea, selectedCategory])
 
+
   return (
     <div className="bg-white p-6 pt-15">
       <nav className="border-b w-full z-20 top-0 start-0 border-default fixed bg-white p-4 flex justify-between items-center">
@@ -55,10 +57,14 @@ function App() {
         </h1>
         <div className="flex items-center gap-4">
           <button className="mr-2 bg-apricot-cream/50 hover:bg-apricot-cream cursor-pointer text-black text-sm font-medium  py-1.5 px-3 rounded"
-          onClick={() => { setShowForm(true); setSelectedRecipe(null) }}>
+          onClick={() => { setView("form"); setSelectedRecipe(null) }}>
             Create Recipe
           </button>
-          {!showForm && !selectedRecipe && (
+          <button className="mr-2 bg-apricot-cream/50 hover:bg-apricot-cream cursor-pointer text-black text-sm font-medium py-1.5 px-3 rounded"
+          onClick={() => { setView("ingredientSearch"); setSelectedRecipe(null) }}>
+            Ingredient Search
+          </button>
+          {view === "browse" && !selectedRecipe && (
             <RecipeFilter areas={areas}
             categories={categories}
             selectedArea={selectedArea}
@@ -73,21 +79,22 @@ function App() {
           onChange={e => setSearch(e.target.value)}/>
         </div>
       </nav>
-      <div >
-      {showForm ? (<RecipeForm onBack={() => setShowForm(false)} onSubmitSuccess={fetchRecipes}/>
-      ) : selectedRecipe ? (
-      <RecipeDetail recipe={selectedRecipe} onBack={() => setSelectedRecipe(null)} onClick={(recipe) => setSelectedRecipe(recipe)}/>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pt-5"> 
-          {recipes
-          .filter(recipe => recipe.name.toLowerCase().includes(search.toLowerCase()))
-          .map(recipe => (
-            <RecipeCard key={recipe.id}
-            recipe={recipe}
-            onClick={() => setSelectedRecipe(recipe)}/>
-            ))
-          }
-        </div>
+      <div>
+        {selectedRecipe ? (
+          <RecipeDetail recipe={selectedRecipe} onBack={() => setSelectedRecipe(null)} onClick={(recipe) => setSelectedRecipe(recipe)}/>
+        ) : view === "form" ? (
+          <RecipeForm onBack={() => setView("browse")} onSubmitSuccess={fetchRecipes}/>
+        ) : view === "ingredientSearch" ? (
+          <IngredientSearch onSelectRecipe={(recipe) => setSelectedRecipe(recipe)} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pt-5">
+            {recipes
+              .filter(recipe => recipe.name.toLowerCase().includes(search.toLowerCase()))
+              .map(recipe => (
+                <RecipeCard key={recipe.id} recipe={recipe} onClick={() => setSelectedRecipe(recipe)}/>
+              ))
+            }
+          </div>
       )}
       </div>
     </div>
