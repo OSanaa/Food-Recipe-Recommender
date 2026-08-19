@@ -20,6 +20,8 @@ jobs:
           pip install -r requirements.txt
       
       - name: Import app
+        env:
+          DATABASE_URL: "postgresql+asyncpg://neondb_owner:**************@ep-icy-frog-anjqzqt4-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require"
         working-directory: ./backend
         run: | 
           python -c "import app.main"
