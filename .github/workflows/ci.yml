@@ -22,4 +22,4 @@ jobs:
       - name: Import app
         working-directory: ./backend
         run: | 
-          python -c "import app/main"
+          python -c "import app.main"
