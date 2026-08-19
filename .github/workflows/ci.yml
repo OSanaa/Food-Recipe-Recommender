@@ -20,6 +20,6 @@ jobs:
           pip install -r requirements.txt
       
       - name: Import app
-        working-directory: ./backend/app
+        working-directory: ./backend
         run: | 
-          python -c import "*"
+          python -c "import app/main"
