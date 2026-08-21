@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql+asyncpg://user:pass@localhost/db"
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -21,8 +23,12 @@ jobs:
           pip install -r requirements.txt
       
       - name: Import app
-        env:
-          DATABASE_URL: "postgresql+asyncpg://user:pass@localhost/db"
+
         working-directory: ./backend
         run: | 
           python -c "import app.main"
+
+      - name: Test with pytest
+        working-directory: ./backend
+        run: | 
+          pytest
