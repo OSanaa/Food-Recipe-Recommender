@@ -1,0 +1,34 @@
+name: CI
+
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql+asyncpg://user:pass@localhost/db"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Install dependencies
+        working-directory: ./backend
+        run: | 
+          pip install -r requirements.txt
+      
+      - name: Import app
+
+        working-directory: ./backend
+        run: | 
+          python -c "import app.main"
+
+      - name: Test with pytest
+        working-directory: ./backend
+        run: | 
+          pytest
