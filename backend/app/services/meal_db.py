@@ -43,7 +43,3 @@ def transform_meal_to_recipe(meal):
             ingredients.append(temp_dict)
     print(ingredients)
     return(recipe, ingredients)
-
-# meals = asyncio.run(fetch_meals_by_name('chicken'))
-# for meal in meals['meals']:
-#     meals_formatted = transform_meal_to_recipe(meal)
